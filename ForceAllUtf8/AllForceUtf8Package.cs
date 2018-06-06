@@ -15,6 +15,7 @@ using EnvDTE;
 using EnvDTE80;
 using System.IO;
 using System.Text;
+using Task = System.Threading.Tasks.Task;
 
 namespace ForceAllUtf8
 {
@@ -35,12 +36,12 @@ namespace ForceAllUtf8
     /// To get loaded into VS, the package must be referred by &lt;Asset Type="Microsoft.VisualStudio.VsPackage" ...&gt; in .vsixmanifest file.
     /// </para>
     /// </remarks>
-    [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "0.9", IconResourceID = 400)] // Info on this package for Help/About
-    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
+    [ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
     [Guid(AllForceUtf8Package.PackageGuidString)]
     //[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    public sealed class AllForceUtf8Package : Package
+    public sealed class AllForceUtf8Package : AsyncPackage
     {
         /// <summary>
         /// AllForceUtf8Package GUID string.
@@ -66,10 +67,12 @@ namespace ForceAllUtf8
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
         /// where you can put all the initialization code that rely on services provided by VisualStudio.
         /// </summary>
-        protected override void Initialize()
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
-            base.Initialize();
+            //base.Initialize();
 
             var dte = GetService(typeof(DTE)) as DTE2;
             documentEvents = dte.Events.DocumentEvents;
