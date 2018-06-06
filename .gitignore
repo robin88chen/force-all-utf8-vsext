@@ -1,0 +1,7 @@
+/packages
+/.vs
+/bin
+/obj
+*.usr
+/ForceAllUtf8/bin
+/ForceAllUtf8/obj
