@@ -37,7 +37,7 @@ namespace ForceAllUtf8
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
+    [InstalledProductRegistration("#110", "#112", "1.1", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
     [Guid(AllForceUtf8Package.PackageGuidString)]
     //[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
@@ -86,7 +86,13 @@ namespace ForceAllUtf8
                 return;
             }
 
-            var path = document.FullName;
+            string path = document.FullName;
+            bool isJava = false;
+            if (path.EndsWith(".java"))
+            {
+                Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "file '{0}' is java file, will convert to utf-8(no BOM).", path));
+                isJava = true;
+            }
 
             try
             {
@@ -111,7 +117,7 @@ namespace ForceAllUtf8
                     reader = new StreamReader(stream, new UTF8Encoding(true, true));
                     text = reader.ReadToEnd();
                     stream.Close();
-                    File.WriteAllText(path, text, new UTF8Encoding(true));
+                    File.WriteAllText(path, text, new UTF8Encoding(!isJava));  // java file save with no-BOM
                     Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Already convert file '{0}' encoding to utf-8(BOM).", path));
                 }
                 catch (DecoderFallbackException)
@@ -120,7 +126,7 @@ namespace ForceAllUtf8
                     reader = new StreamReader(stream, Encoding.Default);
                     text = reader.ReadToEnd();
                     stream.Close();
-                    File.WriteAllText(path, text, new UTF8Encoding(true));
+                    File.WriteAllText(path, text, new UTF8Encoding(!isJava));
                     Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Already convert file '{0}' encoding to utf-8(BOM).", path));
                 }
 

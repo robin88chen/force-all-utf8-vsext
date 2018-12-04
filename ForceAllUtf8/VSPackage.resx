@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="110" xml:space="preserve">
-    <value>All Force Utf8 (BOM)</value>
+    <value>All Force Utf8 (but Java) with BOM</value>
   </data>
   <data name="112" xml:space="preserve">
-    <value>Force all saved file encoding to Utf8 with BOM</value>
+    <value>Force all saved file encoding to Utf8 with BOM, but Java file encoding to Utf8 without BOM</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="400" type="System.Resources.ResXFileRef, System.Windows.Forms">
