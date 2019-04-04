@@ -5,3 +5,4 @@
 *.usr
 /ForceAllUtf8/bin
 /ForceAllUtf8/obj
+*.user
